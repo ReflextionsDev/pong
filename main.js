@@ -57,6 +57,8 @@ setInterval(update, 5);
 
 function update() {
 
+    // #### Ball Logic ###
+
     // Test the CPU Paddle
     if ((ballPositionX + BALL_SIZE + PADDLE_WIDTH) > GAME_AREA_WIDTH) {
 
@@ -73,7 +75,7 @@ function update() {
             reset()
         }
 
-        // Test the Player Paddle
+    // Test the Player Paddle
     } else if ((ballPositionX - PADDLE_WIDTH) < 0) {
 
         if (ballPositionY > playerPaddleYPosition && ballPositionY < (playerPaddleYPosition + PADDLE_HEIGHT)) {
@@ -102,14 +104,9 @@ function update() {
     ball.style.top = ballPositionY + 'px'
 
 
-    // Update the computer paddle's position
-    
-    if (computerPaddleYPosition + PADDLE_HEIGHT > GAME_AREA_HEIGHT) {
-        computerPaddleYVelocity = -computerPaddleYVelocity
-    } else if (computerPaddleYPosition < 0) {
-        computerPaddleYVelocity = -computerPaddleYVelocity
-    }
+    // ### CPU Logic ###
 
+    // Update the computer paddle's position
 
     // if (computerPaddleYPosition > ballPositionY) {
     //     computerPaddleYVelocity = 0
@@ -122,11 +119,23 @@ function update() {
     //     console.log("ABOVE BALL", computerPaddleYVelocity)
     // } 
     
+
+
+    // CPU boundaries
+    if (computerPaddleYPosition + PADDLE_HEIGHT > GAME_AREA_HEIGHT) {
+        computerPaddleYVelocity = -computerPaddleYVelocity
+    } else if (computerPaddleYPosition < 0) {
+        computerPaddleYVelocity = -computerPaddleYVelocity
+    }
+
+
+    // CPU movement update
     computerPaddleYPosition += computerPaddleYVelocity
     computerPaddle.style.top = `${computerPaddleYPosition}px`
 
-    // Update the player paddle's position
-    // Player input
+    // ### Player Logic ###
+
+    // Update the player paddle's position based on input
     if (input_Down) {
         playerPaddleYVelocity = 1
     } else if (input_Up) {
