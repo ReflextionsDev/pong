@@ -30,10 +30,10 @@ let ballVelocityY = Math.random() < 0.5 ? -1 : 1;
 
 // Reset
 function reset() {
-    ballPositionX = BALL_START_X
-    ballPositionY = BALL_START_Y
     ballVelocityX = 2
     ballVelocityY = Math.random() < 0.5 ? -1 : 1;
+    ballPositionX = BALL_START_X
+    ballPositionY = BALL_START_Y
 }
 
 // Scoring
