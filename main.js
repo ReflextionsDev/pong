@@ -2,38 +2,58 @@
 const GAME_AREA_WIDTH = 700;
 const GAME_AREA_HEIGHT = 500;
 
-// Size of the paddles (in px)
+// Paddles
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 20;
 
-// Size of the ball (in px)
-const BALL_SIZE = 20;
-
-// Get the computer paddle element
 const computerPaddle = document.querySelector('.computer-paddle');
-
-// The y-velocity of the computer paddle
 let computerPaddleYPosition = 0
 let computerPaddleYVelocity = 1
 
-// Get the player paddle element
 const playerPaddle = document.querySelector('.player-paddle');
-
-// The y-velocity of the player paddle
 let playerPaddleYPosition = 0
 let playerPaddleYVelocity = 0
 
-// Update the pong world
+// Ball 
 const ball = document.querySelector('.ball');
-
+const BALL_SIZE = 20;
 const BALL_START_X = 100;
 const BALL_START_Y = 100
 
 let ballPositionX = BALL_START_X
 let ballPositionY = BALL_START_Y
-
 let ballVelocityX = 2;
 let ballVelocityY = 1;
+
+// Reset
+function reset() {
+    ballPositionX = BALL_START_X
+    ballPositionY = BALL_START_Y
+    ballVelocityX = 2;
+    ballVelocityY = 1;
+}
+
+// Player controls
+let input_Down = 0, input_Up = 0
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'w' || event.key === 'ArrowUp') {
+        input_Up = 1
+    } else if (event.key === 's' || event.key === 'ArrowDown') {
+        input_Down = 1
+    }
+})
+
+document.addEventListener('keyup', (event) => {
+    if (event.key === 'w' || event.key === 'ArrowUp') {
+        input_Up = 0
+    } else if (event.key === 's' || event.key === 'ArrowDown') {
+        input_Down = 0
+    }
+})
+
+// Game Update
+setInterval(update, 5);
 
 function update() {
 
@@ -41,17 +61,31 @@ function update() {
     if ((ballPositionX + BALL_SIZE + PADDLE_WIDTH) > GAME_AREA_WIDTH) {
 
         if (ballPositionY > computerPaddleYPosition && ballPositionY < (computerPaddleYPosition + PADDLE_HEIGHT)) {
+
             console.log("CPU Bounce")
             console.log(computerPaddleYPosition, ballPositionY)
+
             ballVelocityX = -ballVelocityX
         } else {
+            
             console.log("CPU L")
+
             reset()
         }
 
         // Test the Player Paddle
     } else if ((ballPositionX - PADDLE_WIDTH) < 0) {
-        ballVelocityX = -ballVelocityX
+
+        if (ballPositionY > playerPaddleYPosition && ballPositionY < (playerPaddleYPosition + PADDLE_HEIGHT)) {
+            console.log("Player Bounce")
+            console.log(playerPaddleYPosition, ballPositionY)
+            ballVelocityX = -ballVelocityX
+        } else {
+            console.log("Player L")
+            reset()
+        }
+
+
     }
 
     // Test the top and bottom boundaries
@@ -69,12 +103,25 @@ function update() {
 
 
     // Update the computer paddle's position
+    
     if (computerPaddleYPosition + PADDLE_HEIGHT > GAME_AREA_HEIGHT) {
         computerPaddleYVelocity = -computerPaddleYVelocity
     } else if (computerPaddleYPosition < 0) {
         computerPaddleYVelocity = -computerPaddleYVelocity
     }
 
+
+    // if (computerPaddleYPosition > ballPositionY) {
+    //     computerPaddleYVelocity = 0
+    //     console.log("IN RANGE", computerPaddleYVelocity)
+    // } else if (computerPaddleYPosition > ballPositionY) {
+    //     computerPaddleYVelocity = -5
+    //     console.log("BELOW BALL", computerPaddleYVelocity)
+    // } else if (computerPaddleYPosition < ballPositionY) {
+    //     computerPaddleYVelocity = 5
+    //     console.log("ABOVE BALL", computerPaddleYVelocity)
+    // } 
+    
     computerPaddleYPosition += computerPaddleYVelocity
     computerPaddle.style.top = `${computerPaddleYPosition}px`
 
@@ -99,31 +146,3 @@ function update() {
     playerPaddleYPosition += playerPaddleYVelocity
     playerPaddle.style.top = `${playerPaddleYPosition}px`
 }
-
-// Call the update() function every 35ms
-setInterval(update, 5);
-
-// Reset
-function reset() {
-    ballPositionX = BALL_START_X
-    ballPositionY = BALL_START_Y
-}
-
-// Player controls
-let input_Down = 0, input_Up = 0
-
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'w') {
-        input_Up = 1
-    } else if (event.key === 's') {
-        input_Down = 1
-    }
-})
-
-document.addEventListener('keyup', (event) => {
-    if (event.key === 'w') {
-        input_Up = 0
-    } else if (event.key === 's') {
-        input_Down = 0
-    }
-})
